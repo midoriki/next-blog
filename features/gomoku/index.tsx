@@ -5,10 +5,11 @@ import { Mark } from './types';
 
 
 export default function Gomoku() {
+
   return (
     <Board
+      currentTurnMark={Mark.x}
       userMark={Mark.x}
-      isUserTurn
       xMoves={[]}
       oMoves={[]}
       move={(coor) => {}}

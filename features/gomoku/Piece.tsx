@@ -10,18 +10,24 @@ interface PieceProps {
   move: (coordinator: Coordinator) => void
   coordinator: Coordinator,
   userMark: Mark,
-  isUserTurn: boolean
+  currentTurnMark: Mark
 }
 
 export default function Piece(props: PieceProps) {
-  const { occupyingMark = Mark.EMPTY } = props;
+  const {
+    occupyingMark = Mark.EMPTY,
+    userMark,
+    currentTurnMark
+  } = props;
+
+  const isUserTurn = userMark === currentTurnMark;
 
   const [hoverMark, setHoverMark] = useState(Mark.EMPTY);
 
   const isOccupied = occupyingMark !== Mark.EMPTY;
 
   function handleClick(event: React.MouseEvent) {
-    if (isOccupied) {
+    if (isOccupied || !isUserTurn) {
       return;
     }
 
@@ -29,9 +35,7 @@ export default function Piece(props: PieceProps) {
   } 
 
   function handleMouseOver(event: React.MouseEvent) {
-    const { userMark, isUserTurn  } = props;
-    
-    if (isOccupied || isUserTurn) {
+    if (isOccupied || !isUserTurn) {
       return;
     }
     
@@ -53,7 +57,7 @@ export default function Piece(props: PieceProps) {
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
     >
-      {props.occupyingMark}
+      {occupyingMark}
       {hoverMark}
     </td>
   );

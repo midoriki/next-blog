@@ -19,7 +19,7 @@ interface Score {
 
 interface BoardProps {
   userMark: Mark,
-  isUserTurn: boolean,
+  currentTurnMark: Mark,
   xMoves: Coordinator[],
   oMoves: Coordinator[],
   move: (coordinator: Coordinator) => void,
@@ -28,36 +28,31 @@ interface BoardProps {
 }
 
 export default function Board(props: BoardProps) {
+  const {
+    userMark,
+    currentTurnMark,
+    xMoves,
+    oMoves
+  } = props;
   const firstLoad = useRef(true);
 
   useEffect(() => {
     if (firstLoad.current) {
-      const container = $(`#${CONTAINER_ID}`);
-      const board = $(`#${BOARD_ID}`);
-
-      if (typeof container === 'undefined' || typeof board === 'undefined') {
-        return;
-      }
-
-      const innerWidth = container.width() || 0;
-      const outerWidth = board.width() || 0;
-
-      container.scrollLeft((innerWidth - outerWidth) / 2);
-      window.scrollTo(0, window.innerHeight / 2);
+      // TODO: scroll to center of the screen
 
       firstLoad.current = false;
     }
   });
 
+  const isUserTurn = userMark === currentTurnMark;
+
   function move(coordinator: Coordinator) {
-    if (props.isUserTurn) {
+    if (isUserTurn) {
       props.move(coordinator);
     }
   }
 
   function pieceOccupiedBy(coordinator: Coordinator): Mark {
-    const { xMoves, oMoves } = props;
-
     const  isXOccupied = xMoves.some(
       m => m.x === coordinator.x && m.y === coordinator.y
     );
@@ -97,8 +92,8 @@ export default function Board(props: BoardProps) {
             key={`${i}${j}`} 
             coordinator={coordinator}
             move={move}
-            userMark={props.userMark}
-            isUserTurn={props.isUserTurn}
+            userMark={userMark}
+            currentTurnMark={currentTurnMark}
             occupyingMark={pieceOccupiedBy(coordinator)}
           />
         );

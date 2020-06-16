@@ -6,8 +6,6 @@ import GomokuController from 'features/gomoku';
 
 export default function Gomoku() {
   return (
-    <Layout title="Gomoku">
-      <GomokuController />
-    </Layout>
+    <GomokuController />
   );
 }
